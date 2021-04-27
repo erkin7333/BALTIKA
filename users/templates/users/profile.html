@@ -1,0 +1,49 @@
+{% extends 'main/base.html' %}
+{% load  crispy_forms_tags %}
+
+
+{% block content %}
+    <div class="container mt-5 pt-5">
+        <h2 class="text-center text-uppercase pb-2 border-bottom text-light">User Profile</h2>
+        <div class="row justify-content-around">
+            <div class="col-lg-5 d-flex flex-column align-items-center  my_shadow text-light px-4 py-2 rounded">
+                <img src="{{user.profile.image.url}}" alt="img" class="shadow-lg" style="width: 200px; height: 200px; border-radius: 50%;">
+                <h2>{{user.username}}</h2>
+                <p>{{user.email}}</p>
+            </div>
+            <div class="col-lg-5  my_shadow text-light px-4 py-2 rounded">
+                <form action="{% url 'profile' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form_u | crispy}}
+                    {{form_p | crispy}}
+                    <button type="submit" class="btn btn-info">Update</button>
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container pt-3">
+        <h2 class="text-center text-uppercase pb-2 border-bottom text-white">User Post</h2>
+        {% for post in posts %}
+        <div class="card w-75 mx-auto my-4 bg-dark my_shadow">
+            <div class="card-header d-flex align-items-center border-secondary">
+                <img src="{{post.author.profile.image.url}}" alt="img" style="width: 40px; height: 40px; border-radius: 50%;" class="mr-3">
+                <small class="text-muted">{{ post.author }}</small>
+            </div>
+            <div class="card-body bg-dark text-light rounded">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.content }}</p>
+                
+            </div>
+            <div class="card-footer border-secondary text-muted">
+                <small>{{ post.post_added | date:'d F, Y' }}</small>
+
+                <a href="{% url 'main:post-edit' post.id %}" class="btn btn-primary ml-5">Edit</a>
+                <a href="{% url 'main:post-delete' post.id %}?from=profile" class="btn btn-danger ml-5">Delete</a>
+                <a href="{% url 'main:post-more' post.id %}" class="btn btn-info ml-5">More</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

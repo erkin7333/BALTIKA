@@ -1,0 +1,29 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <div class="container mt-5 pt-4">
+        {% for post in object_list %}
+                <div class="card w-75 mx-auto my-3 my_shadow bg-dark border-0">
+                    <div class="card-header d-flex align-items-center border-secondary bg-dark" >
+                        <img src="{{ post.author.profile.image.url }}" alt="img"
+                             style="width:40px; height:40px; border-radius: 50%;" class="mr-3">
+                        <small class="text-light"> Created by <a href="{% url 'main:post-all' post.author.id %}" class="text-warning">{{ post.author }}</a></small>
+                        <small class="text-light ml-3">{{post.post_added|date:'d F, Y'}}</small>
+                        {% if post.author == request.user %}
+                            <a href="{% url 'main:post-edit' post.id %}" class="btn btn-info ml-3 text-light">Edit</a>
+                            <a href="{% url 'main:post-delete' post.id %}" class="btn btn-danger ml-2 text-light">Delete</a>
+                        {% endif %}
+                        <small class="ml-auto"><a href="{% url 'main:post-more' post.id %}" class="ml-auto btn btn-outline-info text-white">More</a></small>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-light">{{ post.title }}</h5>
+                        <p class="card-text text-light">{{ post.content | truncatechars:100}}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <h1 class="text-center text-warning pt-5">Nothing found......</h1>
+                {% endfor %}
+        </div>
+
+
+{% endblock content %}
